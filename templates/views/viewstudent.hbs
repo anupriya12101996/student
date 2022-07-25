@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Profile and Notifications Dropdowns</title>
+  <link rel="stylesheet" href="css/style1.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+    integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <style>
+    td a {
+      color: brown;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+  <script type="text/javascript">
+    fetch('https://student-testingapp.herokuapp.com/getstudentsdata').then(res => res.json()).then(data => {
+      if (data.data) {
+        let arr = data.data,
+          table = document.getElementsByTagName('table')[0],
+          tr = null,
+          td0 = null,
+          td1 = null,
+          td2 = null,
+          td3 = null,
+          td4 = null,
+          td5 = null,
+          td6 = null,
+          td7 = null,
+          td8 = null,
+          name = '',
+          school = '',
+          status = '',
+          classValue = '',
+          dob = '',
+          division = '';
+
+        for (let i = 0; i < arr.length; i++) {
+          td0 = document.createElement('td');
+          td0.innerHTML = i + 1;
+          td1 = document.createElement('td');
+          td1.innerHTML = arr[i].name;
+          td2 = document.createElement('td');
+          td2.innerHTML = arr[i].dob;
+          td3 = document.createElement('td');
+          td3.innerHTML = arr[i].school;
+          td4 = document.createElement('td');
+          td4.innerHTML = arr[i].class;
+          td5 = document.createElement('td');
+          td5.innerHTML = arr[i].division;
+          td6 = document.createElement('td');
+          td6.innerHTML = arr[i].status == "on" ? "Active" : "Inactive";
+          td7 = document.createElement('td');
+          const anchor = document.createElement('a');
+          anchor.innerText = 'Edit';
+          anchor.onclick = () => editStudent(arr[i]._id);
+          td7.appendChild(anchor);
+          td8 = document.createElement('td');
+          const anchor2 = document.createElement('a');
+          anchor2.innerText = 'Delete';
+          anchor2.onclick = () => deleteStudent(arr[i]._id);
+          td8.appendChild(anchor2);
+
+          tr = document.createElement('tr');
+          tr.appendChild(td0);
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tr.appendChild(td3);
+          tr.appendChild(td4);
+          tr.appendChild(td5);
+          tr.appendChild(td6);
+          tr.appendChild(td7);
+          tr.appendChild(td8);
+          table.appendChild(tr);
+        }
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+
+    function deleteStudent(id){
+      fetch("https://student-testingapp.herokuapp.com/deletestudent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: id
+        })
+      }).then(res => res.json()).then(data => {
+        if (data.data) {
+          window.location.reload();
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    }
+
+    function downloadExcel(){
+      fetch("https://student-testingapp.herokuapp.com/downloadsheet").then(res => res.json()).then(data => {
+        if (data.data) {
+          alert("Downloaded done");
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    }
+
+    function editStudent(id){
+      localStorage.setItem('tunica_id', id);
+      window.location.href = 'https://student-testingapp.herokuapp.com/updatestudent';
+    }
+
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="navbar">
+      <div class="navbar_left">
+        <div class="logo">
+          <a href="#">TUNICALABS MEDIA</a>
+        </div>
+      </div>
+
+      <div class="navbar_right">
+        <div class="notifications">
+          <div class="icon_wrap"><i class="far fa-bell"></i>
+            <span class="icon_wrap_badge">1</span>
+          </div>
+
+        </div>
+        <div class="profile">
+          <div class="icon_wrap">
+            <img src="css/images/profile-pic.png" alt="profile_pic">
+            <span class="name">Rajan</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="sidebar">
+      <a class="h2" href="#">Student<i class="fas fa-caret-down"></i></a>
+      <ul>
+        <li><a href="/viewstudent"><i class="fas fa-users"></i>View Student</a></li>
+        <li><a href="/addstudent"><i class="fas fa-user-plus"></i>Add Student</a></li>
+      </ul>
+    </div>
+    <div class="main_content">
+      <div id="menu">
+        <h2>View Student</h2>
+        <ul>
+          <li><a href="#">Name</a></li>
+          <li><a href="#">Age</a></li>
+          <li><a href="#">School<i class="fas fa-caret-down"></i></a>
+            <ul>
+              <li><a href="#">Modal School</a></li>
+              <li><a href="#">DPS School</a></li>
+              <li><a href="#">DAV School</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#">Class<i class="fas fa-caret-down"></i></a>
+            <ul>
+              <li><a href="#">3</a></li>
+              <li><a href="#">4</a></li>
+              <li><a href="#">5</a></li>
+            </ul>
+
+          </li>
+          <li><a href="#">Divison<i class="fas fa-caret-down"></i></a>
+            <ul>
+              <li><a href="#">A</a></li>
+              <li><a href="#">B</a></li>
+              <li><a href="#">C</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form>
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search">
+          <button type="submit">Search</button>
+        </form>
+        <table class="content-table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>School</th>
+              <th>Class</th>
+              <th>Divison</th>
+              <th>Status</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Student Name</td>
+              <td>10</td>
+              <td>Model School</td>
+              <td>3</td>
+              <td>A</td>
+              <td>Active</td>
+              <td><a href="#">Edit</a></td>
+              <td><a href="#">Delete</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rightfloat">
+        <ul class="numbering">
+          <li><a href="#"></a></li>
+          <li><a href="#" class="active">1</a></li>
+          <li><a href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#">></a></li>
+        </ul>
+      </div>
+      <div class="leftfloat">
+        <button class="download" onclick="downloadExcel()">Download Excel</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
